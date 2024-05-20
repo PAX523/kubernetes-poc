@@ -16,21 +16,26 @@ public class Endpoint
 
     private final ApplicationProperties properties;
 
+    private String getBaseUrl()
+    {
+        return String.format("http://%s:%d", properties.getInternalServiceHost(), properties.getInternalServicePort());
+    }
+
     @GetMapping(path = "/ping/{response}")
     public ResponseEntity<String> ping(@PathVariable("response") final String response)
     {
-        return restTemplate.getForEntity(String.format("http://localhost:%d/ping/%s", properties.getExternalServicePort(), response), String.class);
+        return restTemplate.getForEntity(String.format("%s/ping/%s", getBaseUrl(), response), String.class);
     }
 
     @PostMapping(path = "/message/save")
     public void saveMessage(@RequestParam("message") final String message)
     {
-        restTemplate.postForEntity(String.format("http://localhost:%d/message/save?message=%s", properties.getExternalServicePort(), message), Void.class, String.class);
+        restTemplate.postForEntity(String.format("%s/message/save?message=%s", getBaseUrl(), message), Void.class, String.class);
     }
 
     @GetMapping(path = "/message/all")
     public ResponseEntity<List> getAllMessages()
     {
-        return restTemplate.getForEntity(String.format("http://localhost:%d/message/all", properties.getExternalServicePort()), List.class);
+        return restTemplate.getForEntity(String.format("%s/message/all", getBaseUrl()), List.class);
     }
 }
