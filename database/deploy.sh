@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 docker run  \
   -p 3306:3306 \
   -v /home/alpaxoul/ServerAlpaxoul/database/mysql:/var/lib/mysql \
