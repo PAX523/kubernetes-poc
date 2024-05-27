@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - yourdomain.com
+        - paxoftwer.de
       secretName: external-service-tls
   rules:
-    - host: yourdomain.com
+    - host: paxoftwer.de
       http:
         paths:
           - path: /
