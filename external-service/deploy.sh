@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-sudo docker rm -f poc-external-service
-sudo docker build -t poc-external-service .
+sudo docker rm -f external-service
+sudo docker build -t external-service:latest .
 sudo docker run -d \
-                --name poc-external-service \
+                --name external-service \
                 --network internal-network \
-                poc-external-service
+                -p 80:8080 \
+                external-service

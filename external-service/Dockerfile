@@ -1,7 +1,7 @@
 FROM eclipse-temurin:21-jre-alpine
 
 # specify environment variables
-ARG INTERNAL_SERVER_HOST=poc-internal-service
+ARG INTERNAL_SERVER_HOST=internal-service
 ENV INTERNAL_SERVER_HOST=$INTERNAL_SERVER_HOST
 
 ARG INTERNAL_SERVER_PORT=8081

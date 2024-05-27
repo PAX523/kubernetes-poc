@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-sudo docker rm -f poc-internal-service
-sudo docker build -t poc-internal-service .
+sudo docker rm -f internal-service
+sudo docker build -t internal-service:latest .
 sudo docker run -d \
-                --name poc-internal-service \
+                --name internal-service \
                 --network internal-network \
-                poc-internal-service
+                internal-service

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: external-service
-          image: poc-external-service:latest
+          image: external-service:latest
           ports:
             - containerPort: 8080
 ---
