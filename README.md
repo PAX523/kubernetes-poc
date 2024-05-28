@@ -21,6 +21,16 @@ helm repo update
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace
 ```
 
+### Preparations:
+
+- Build the images for `internal-service` and `external-service` by running the `deploy.sh` scripts and terminate them again
+- Run minikube:
+
+```shell
+minikube start
+minikube dashboard
+```
+
 ### Deploy resources:
 
 ```shell
