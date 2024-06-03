@@ -6,4 +6,4 @@ sudo docker run -d \
                 --name external-service \
                 --network internal-network \
                 -p 80:8080 \
-                external-service
+                external-service:1.0.0

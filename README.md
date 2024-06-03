@@ -2,6 +2,8 @@
 
 Consists of: external service, internal service, database
 
+![Architecture](Specification.png)
+
 ## Run on Kubernetes
 
 ### Install the Nginx Ingress Controller:
@@ -31,6 +33,12 @@ minikube start
 minikube dashboard
 ```
 
+- Add the built images to the local minikube registry:
+
+```shell
+minikube image load image-name:tag
+```
+
 ### Deploy resources:
 
 ```shell
@@ -52,3 +60,9 @@ kubectl delete deployment external-service
 kubectl delete service external-service
 kubectl delete ingress external-service-ingress
 ```
+
+### DigitalOcean:
+
+Expected image names: `registry.digitalocean.com/<your-registry-name>/<image-name>:<tag>`
+
+Connect with DigitalOcean: `doctl registry login`
