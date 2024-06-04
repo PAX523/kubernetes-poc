@@ -29,7 +29,7 @@ helm install cert-manager jetstack/cert-manager --namespace cert-manager --creat
 - Run minikube:
 
 ```shell
-minikube start
+minikube start --apiserver-ips 0.0.0.0
 minikube dashboard
 ```
 

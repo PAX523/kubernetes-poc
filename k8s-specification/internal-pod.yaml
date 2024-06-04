@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: internal-service
+  name: internal-service-pod
   labels:
     name: internal-service-pod
     app: kubernetes-poc
