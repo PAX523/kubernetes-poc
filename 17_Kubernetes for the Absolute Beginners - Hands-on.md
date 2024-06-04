@@ -321,11 +321,11 @@ kubectl get all
 
 ### Kubernetes files
 
-`pod-defintion.yml`:
+POD:
 
 ```yaml
-apiVersion: v1 or      v1 or    apps/v1 or    apps/v1
-kind: Pod or Service or ReplicaSet or Deployment
+apiVersion: v1
+kind: Pod
 metadata:
   name: myapp-pod
   labels: # can contain any arbitrary key-values
@@ -341,6 +341,54 @@ spec:
       env: # for environment variables to be set
         - name: DATABASE_USER
           value: "ADMIN"
+```
+
+Deployment:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-end-deployment
+  labels:
+    app: myapp
+    type: myapp-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      type: front-end
+  template:
+    metadata:
+      name: myapp-pod
+      labels:
+        app: myapp
+        type: front-end
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx
+```
+
+Service:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-end-service
+  labels:
+    app: myapp
+    type: myapp-service
+spec:
+  type: NodePort
+  ports:
+    - targetPort: 80
+      port: 80
+      nodePort: 30008
+  selector:
+    - app: myapp
+      tier: front-end
 ```
 
 ```shell
