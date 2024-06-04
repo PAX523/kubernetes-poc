@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: internal-service-pod
+  name: internal-service
   labels:
-    app: internal-service-app
+    name: internal-service-pod
+    app: kubernetes-poc
 spec:
   containers:
-    - name: internal-service
+    - name: internal-service-container
       image: internal-service:1.0.0
       ports:
         - containerPort: 8081

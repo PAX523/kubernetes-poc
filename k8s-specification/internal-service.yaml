@@ -3,9 +3,10 @@ kind: Service
 metadata:
   name: internal-service
   labels:
-    app: internal-service-app
+    name: internal-service
+    app: kubernetes-poc
 spec:
   selector:
-    app: internal-service-app
+    name: internal-service-pod
   ports:
     - port: 8081

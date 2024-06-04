@@ -3,11 +3,12 @@ kind: Service
 metadata:
   name: external-service
   labels:
-    app: external-service-app
+    name: external-service
+    app: kubernetes-poc
 spec:
   type: NodePort
   selector:
-    app: external-service-app
+    name: external-service-pod
   ports:
     - port: 8080
-      nodePort: 7777
+      nodePort: 30000

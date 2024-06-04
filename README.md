@@ -53,6 +53,14 @@ kubectl apply -f 05-letsencrypt-clusterissuer.yaml
 
 Apply the YAML files again.
 
+### Get IP for minikube:
+
+Use internal IP:
+
+```shell
+kubectl get nodes -o wide
+```
+
 ### Remove deployment:
 
 ```shell

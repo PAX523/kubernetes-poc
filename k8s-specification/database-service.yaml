@@ -1,11 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: database-service
+  name: mysql-server
   labels:
-    app: database-service
+    name: database-service
+    app: kubernetes-poc
 spec:
   selector:
-    app: database
+    name: database-pod
   ports:
     - port: 3306
