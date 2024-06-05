@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class ApplicationProperties
 {
-    @Value("${internal-service.host}")
+    @Value("${application.internal-service.host}")
     private String internalServiceHost;
 
-    @Value("${internal-service.port}")
+    @Value("${application.internal-service.port}")
     private int internalServicePort;
 }

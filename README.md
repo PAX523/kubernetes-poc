@@ -55,7 +55,7 @@ Apply the YAML files again.
 
 ### Get IP for minikube:
 
-Use internal IP:
+Used internal IP:
 
 ```shell
 kubectl get nodes -o wide
