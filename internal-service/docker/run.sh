@@ -2,4 +2,4 @@
 
 /__cacert_entrypoint.sh
 
-java -jar /opt/service/service.jar --server.port=$SERVER_PORT
+java -jar /opt/service/service.jar

@@ -12,4 +12,4 @@ spring:
     password: ${MYSQL_PASSWORD:password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 server:
-  port: 8081
+  port: ${SERVER_PORT:8081}

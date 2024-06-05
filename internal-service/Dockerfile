@@ -1,14 +1,9 @@
 FROM eclipse-temurin:21-jre-alpine
 
 # specify environment variables
-ARG MYSQL_HOST=mysql-server
-ENV MYSQL_HOST=$MYSQL_HOST
-
-ARG MYSQL_PORT=3306
-ENV MYSQL_PORT=$MYSQL_PORT
-
-ARG SERVER_PORT=8081
-ENV SERVER_PORT=$SERVER_PORT
+ENV MYSQL_HOST=mysql-server
+ENV MYSQL_PORT=3306
+ENV SERVER_PORT=8081
 
 # setup
 COPY docker/run.sh /opt/service/
