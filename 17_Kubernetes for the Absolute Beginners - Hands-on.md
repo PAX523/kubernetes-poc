@@ -279,6 +279,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: nginx-ingress-serviceaccount
+  # Nginx potentially needs these two: ingress-nginx, ingress-nginx-admission
 ```
 
 ```yaml
@@ -287,9 +288,14 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ingress-app1
+  #annotations:
+  # if we wanna change the path of the URL to another one when forwarding to the particular service:
+  #  nginx.ingress.kubernetes.io/rewrite-target: /
+  # if we wanna disable redirect to HTTPS:
+  #  nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-    - host: sub.domain.com # optional if it must be restricted on specific domain domain (default: *)
+    - host: sub.domain.com # optional if it must be restricted on specific domain (default: *)
       http:
         paths:
           - pathType: Prefix
@@ -308,9 +314,48 @@ spec:
                   number: 8080
 ```
 
+### Network Security
+
+"Ingress" means incoming traffic to a service, "Egress" represents outgoing traffic from a service.
+
+By default, all PODs can communicate with each other. A Network Policy allows to specify which POD is allowed to communicate with another POD.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: database # labels of the POD where this policy must apply to
+  policyTypes:
+    - Ingress # incoming/outcoming/both traffic - following ingress/egress settings only take effect when they are mentioned in "policyTypes"
+    # every type that is not mentioned here, won't be allowed - in this case: no outgoing calls by the database POD are allowed
+  ingress:
+    - from: # labels of PODs that are allowed to communicate with it
+        - podSelector:
+            matchLabels:
+              app: api-service
+          namespaceSelector: # optional - if you wanna restrict the traffic only on a particular namespace
+            matchLabels:
+              name: prod
+        - ipBlock: # optional logical OR which also allows access from particular IP addresses
+            cidr: 192.168.5.10/32
+        - namespaceSelector: # optional logical OR which also allows access from particular namespace
+            matchLabels:
+              name: dev
+      ports:
+        - protocol: TCP
+          port: 3306
+  #egress:
+  #  - to:
+  #      ...
+```
+
 ### Namespaces
 
-May be used to separte between testing and production environment. To access hostname of service `database` of the namespace `dev`, it has the
+May be used to separate between testing and production environment. To access hostname of service `database` of the namespace `dev`, it has the
 following URL:
 
 ```database.dev.svc.cluster.local```
@@ -607,11 +652,6 @@ spec:
 For repeated job execution.
 
 ```shell
- ┌──┬──┐  ╔══╦══╗ ╒══╤══╕ ╓──╥──╖
- │  │  │  ║  ║  ║ │  │  │ ║  ║  ║
- ├──┼──┤  ╠══╬══╣ ╞══╪══╡ ╟──╫──╢
- │  │  │  ║  ║  ║ │  │  │ ║  ║  ║
- └──┴──┘  ╚══╩══╝ ╘══╧══╛ ╙──╨──╜
 # ┌──────── minute (0 - 59)
 # │ ┌──────── hour (0 - 23)
 # │ │ ┌──────── day (1 - 31)
