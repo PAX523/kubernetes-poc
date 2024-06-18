@@ -1,4 +1,14 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-initdb-config
+data:
+  init.sql: |
+    CREATE DATABASE IF NOT EXISTS 'kubernetes-poc';
+    CREATE USER 'development'@'%' IDENTIFIED BY 'password';
+    GRANT ALL ON *.* TO 'development'@'%';
+---
+apiVersion: v1
 kind: Pod
 metadata:
   name: database-pod
@@ -24,13 +34,3 @@ spec:
     - name: database-persistent-storage
       persistentVolumeClaim:
         claimName: database-pvc
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: mysql-initdb-config
-data:
-  init.sql: |
-    CREATE DATABASE IF NOT EXISTS `kubernetes-poc`;
-    CREATE USER 'development'@'%' IDENTIFIED BY 'password';
-    GRANT ALL ON *.* TO 'development'@'%';

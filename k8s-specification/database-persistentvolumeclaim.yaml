@@ -3,9 +3,9 @@ kind: PersistentVolumeClaim
 metadata:
   name: database-pvc
 spec:
+  storageClassName: standard
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: 500Mi
-  storageClassName: standard
