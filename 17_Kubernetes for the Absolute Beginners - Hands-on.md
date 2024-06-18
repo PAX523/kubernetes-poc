@@ -680,6 +680,136 @@ spec:
           restartPolicy: OnFailure
 ```
 
+### Volumes
+
+On DigitalOcean, you create a persistent volume via the UI and specify a `PersistentVolumeClaim`.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-vol1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  persistentVolumeReclaimPolicy: Delete # optional (default: "Retain"): "Delete" determines that it's deleted when the Claim was removed (the default 
+  # doesn't touch it); "Recycle" reuses that value but clears it beforehand when it's getting reused
+
+  hostPath: # only reasonable for local development 
+    path: /tmp/data
+
+  # preferred for production environment on DigitalOcean
+  storageClassName: do-block-storage # default Persistent Volume on DigitalOcean - replace it for a custom one
+  csi:
+    driver: dobs.csi.digitalocean.com
+    volumeHandle: <volume-id>  
+```
+
+Possible access modes:
+
+- `ReadOnlyMany`: Read only mode across all nodes (the only supported one by DigitalOcean)
+- `ReadWriteOnce`: One single node is only allowed to have read/write access by the contained PODs on that node
+- `ReadWriteMany`: Read/write access across all nodes
+- `ReadWriteOncePod`: Only at most one POD across the whole cluster has read/write access
+
+To use the storage (`PersistentVolume`) created by an administrator, the users (developers) create a `PersistentVolumeClaim`. Relationship between
+Volume and Claim: 1 to 1. Per Claim, you need a dedicated Volume.
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: myclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 500Mi
+  selector: # optional
+    matchLabels:
+      name: database-volume
+```
+
+For PODs with persistent data (e.g. database), use `StatefulSet` in place of `Deployment`.
+
+If you apply a Claim, Kubernetes tries to find an existing Volume that matches the Claim's requirements (access mode, size).
+
+### Stateful Set
+
+Similar to Deployment (rolling updates, scaling), but intended for use cases where data must be stored persistently. Differences:
+
+- If scaled, PODs are deployed sequentially and not in parallel
+- On initial start-up, each POD clones the persistent data of its previous POD of the start-up order
+
+The manifest file is the same as for Deployment, but with different `kind` and additional properties:
+
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql # future names of the replicated PODs: mysql-0, mysql-1, mysql-2, ...
+  labels:
+    app: mysql
+spec:
+  serviceName: mysql-h # name of the headless service
+  selector:
+    matchLabels:
+      app: mysql
+
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql
+  volumeClaimTemplates: # in order to automatically create a separate volume per replica 
+    - metadata:
+        name: data-volume
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        ...
+```
+
+Headless service: special kind of service which doesn't perform load balancing, but assigns static domain names to pods:
+
+```
+podname.headless-servicename.namespace.svc.example.com
+```
+
+In case of StatefulSets, the names are like: `mysql-0.mysql-h.default.svc.cluster.local` (master service),
+`mysql-1.mysql-h.default.svc.cluster.local`, ...
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-h
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+  clusterIP: None
+```
+
+And the POD manifest must have this property matching the headless service's name:
+
+```yaml
+...
+spec:
+  subdomain: mysql-h
+  hostname: mysql-pod
+```
+
+This in total creates: `mysql-0.mysql-h.default.svc.cluster.local`, ...
+
 ### Design approach
 
 ![Example application](example-app.png)
@@ -698,6 +828,7 @@ spec:
     - Consider that this doesn't mean that you group a service and a database application into one single POD or respectively one single deployment
       (always think about replicas: is it reasonable to have more than one replica for that POD with that containers in it?)
     - Services are not wrapped into a Deployment
+- For PODs with persistent data (e.g. database), use `StatefulSet` in place of `Deployment`.
 
 Examples for multi-container PODs:
 
@@ -949,6 +1080,9 @@ spec:
         httpGet:
           port: 8080
           path: /api/healthy
+      volumeMounts:
+        - mountPath: /path/in/container
+          name: my-persistent-data
   volumes:
     - name: mysql-config-volume
       configMap:
@@ -956,6 +1090,12 @@ spec:
     - name: secret-volume # if you wanna store the secrets in a separate volume
       secret: # each key is stored as a file which contains the value
         secretName: secrets-config
+    - name: my-persistent-data # to store something on a persistent volume
+      persistentVolumeClaim:
+        claimName: my-claim # set name of the "PersistentVolumeClaim"
+    - name: log-volume # to map a volume into the node's host
+      hostPath:
+        path: /var/log/webapp
   tolerations: # specifies which tainted nodes they accept
     - key: "value" # all values must necessarily be in quotes
       operator: "Equal"
@@ -1125,3 +1265,55 @@ Shorthand for `delete` followed by `apply`:
 ```shell
 kubectl replace --force -f definition.yml
 ```
+
+### Helm
+
+- Some kind of package manager for Kubernetes
+- Allows to declare entire installation packages of my application which contains all objects and allows to configure them
+
+```shell
+helm install [release-name] [chart-name]
+helm upgrade poc ...
+helm rollback poc ...
+helm uninstall [release-name] [chart-name]
+
+helm search hub wordpress # search for wordpress
+helm list # to list installations
+
+helm pull --untar bitnami/wordpress # to download only
+helm install release-4 ./wordpress # to install from the extracted folder
+```
+
+Install Helm: https://helm.sh/docs/intro/install/
+
+Prepare installation package (called "Helm Chart") of a custom application:
+
+- Convert the YAML files into templates and move them into a `templates/` folder
+    - Variable values like `- image: wordpress:4.8-apache` can be converted into variables like `- image: {{ .Values.image }}`
+- Variables are stored to a `values.yaml` with default values:
+
+```yaml
+image: wordpress:4.8-apache
+```
+
+- Create `Chart.yaml` file with meta information about the Helm Chart itself:
+
+```yaml
+apiVersion: v2
+name: Wordpress
+version: 9.0.3
+description: ...
+keywords:
+  - wordpress
+  - cms
+home: http://www.wordpress.com/
+sources:
+  - https://github.com/...
+maintainers:
+  - name: Bitnami
+    email: info@example.com
+```
+
+Official repository for Helm Charts: https://artifacthub.io/
+
+Install something: `helm install release-3 bitnami/wordpress`
