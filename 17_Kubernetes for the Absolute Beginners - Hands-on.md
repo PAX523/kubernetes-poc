@@ -709,9 +709,9 @@ spec:
 
 Possible access modes:
 
-- `ReadOnlyMany`: Read only mode across all nodes (the only supported one by DigitalOcean)
+- `ReadOnlyMany`: Read only mode across all nodes (not supported by DigitalOcean)
 - `ReadWriteOnce`: One single node is only allowed to have read/write access by the contained PODs on that node
-- `ReadWriteMany`: Read/write access across all nodes
+- `ReadWriteMany`: Read/write access across all nodes (not supported by DigitalOcean)
 - `ReadWriteOncePod`: Only at most one POD across the whole cluster has read/write access
 
 To use the storage (`PersistentVolume`) created by an administrator, the users (developers) create a `PersistentVolumeClaim`. Relationship between
