@@ -697,10 +697,11 @@ spec:
   persistentVolumeReclaimPolicy: Delete # optional (default: "Retain"): "Delete" determines that it's deleted when the Claim was removed (the default 
   # doesn't touch it); "Recycle" reuses that value but clears it beforehand when it's getting reused
 
-  hostPath: # only reasonable for local development 
+  # option 1: only reasonable for local development
+  hostPath:
     path: /tmp/data
 
-  # preferred for production environment on DigitalOcean
+  # option 2: preferred for production environment on DigitalOcean
   storageClassName: do-block-storage # default Persistent Volume on DigitalOcean - replace it for a custom one
   csi:
     driver: dobs.csi.digitalocean.com

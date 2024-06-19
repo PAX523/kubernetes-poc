@@ -39,6 +39,12 @@ minikube dashboard
 minikube image load image-name:tag
 ```
 
+- Inspect the minikube VM:
+
+```shell
+minikube ssh
+```
+
 ### Deploy resources:
 
 ```shell
@@ -47,6 +53,7 @@ kubectl apply -f 02-internal-service-deployment.yaml
 kubectl apply -f 03-external-service-deployment.yaml
 kubectl apply -f 04-external-service-ingress.yaml
 kubectl apply -f 05-letsencrypt-clusterissuer.yaml
+kubectl apply -k database-persistentvolume/local/
 ```
 
 ### Update deployment:
