@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: external-service-deploy
+  labels:
+    name: external-service-deploy
+    app: kubernetes-poc
+spec:
+  selector:
+    matchLabels:
+      name: external-service-po
+      app: kubernetes-poc
+  template:
+    metadata:
+      name: external-service-po
+      labels:
+        name: external-service-po
+        app: kubernetes-poc
+    spec:
+      containers:
+        - name: external-service-container
+          image: external-service:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: INTERNAL_SERVER_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: internal-server.host
+            - name: INTERNAL_SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: internal-server.port
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: external-server.port

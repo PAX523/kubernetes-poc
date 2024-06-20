@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  internal-server.host: "internal-svc"
+  internal-server.port: "8081"
+  external-server.port: "8080"
+
+  database.host: "mysql-server"
+  database.port: "3306"
+  database.user: "application-user"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secret
+data:
+  database.root.password: "cGFzc3dvcmQK"
+  database.password: "dWx0cmEtc2VjdXJlLXBhc3N3b3JkLTEyMw=="
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-initdb-config
+data:
+  database.init.sql: "Q1JFQVRFIERBVEFCQVNFIElGIE5PVCBFWElTVFMgYGt1YmVybmV0ZXMtcG9jYDsKQ1JFQVRFIFVTRVIgJ2FwcGxpY2F0aW9uLXVzZXInQCclJyBJREVOVElGSUVEIEJZICd1bHRyYS1zZWN1cmUtcGFzc3dvcmQtMTIzJzsKR1JBTlQgQUxMIE9OICouKiBUTyAnYXBwbGljYXRpb24tdXNlcidAJyUnOw=="

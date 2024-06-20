@@ -1,2 +1,2 @@
 resources:
-  - database-persistentvolume.yaml
+  - database-pv.yaml

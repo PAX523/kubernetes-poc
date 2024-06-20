@@ -472,8 +472,8 @@ kind: Secret
 metadata:
   name: database-config
 data:
-  KEY1: "value1"
-  KEY2: "value2"
+  KEY1: "value1 as Base64"
+  KEY2: "value2 as Base64"
 ```
 
 ```shell

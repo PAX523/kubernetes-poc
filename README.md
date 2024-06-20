@@ -48,12 +48,17 @@ minikube ssh
 ### Deploy resources:
 
 ```shell
-kubectl apply -f 01-mysql-deployment.yaml
-kubectl apply -f 02-internal-service-deployment.yaml
-kubectl apply -f 03-external-service-deployment.yaml
-kubectl apply -f 04-external-service-ingress.yaml
-kubectl apply -f 05-letsencrypt-clusterissuer.yaml
-kubectl apply -k database-persistentvolume/local/
+kubectl apply -f config.yaml
+kubectl apply -k database-pv/local/
+kubectl apply -f database-pvc.yaml
+
+kubectl apply -f database-svc.yaml
+kubectl apply -f internal-svc.yaml
+kubectl apply -f external-svc.yaml
+
+kubectl apply -f database-deploy.yaml
+kubectl apply -f internal-deploy.yaml
+kubectl apply -f external-deploy.yaml
 ```
 
 ### Update deployment:
@@ -68,12 +73,24 @@ Used internal IP:
 kubectl get nodes -o wide
 ```
 
+### Ping External Service:
+
+```shell
+minikube ssh -- curl -i http://localhost:30000/ping/pong
+```
+
 ### Remove deployment:
 
 ```shell
-kubectl delete deployment external-service
-kubectl delete service external-service
-kubectl delete ingress external-service-ingress
+kubectl delete deploy --all
+
+kubectl delete svc --all
+
+kubectl delete pvc --all
+kubectl delete pv --all
+
+kubectl delete cm --all
+kubectl delete secret --all
 ```
 
 ### DigitalOcean:

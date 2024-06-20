@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internal-service-deploy
+  labels:
+    name: internal-service-deploy
+    app: kubernetes-poc
+spec:
+  selector:
+    matchLabels:
+      name: internal-service-po
+      app: kubernetes-poc
+  template:
+    metadata:
+      name: internal-service-po
+      labels:
+        name: internal-service-po
+        app: kubernetes-poc
+    spec:
+      containers:
+        - name: internal-service-container
+          image: internal-service:1.0.0
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: database.host
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: database.port
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: internal-server.port
