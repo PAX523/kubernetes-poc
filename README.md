@@ -56,7 +56,7 @@ kubectl apply -f database-svc.yaml
 kubectl apply -f internal-svc.yaml
 kubectl apply -f external-svc.yaml
 
-kubectl apply -f database-deploy.yaml
+kubectl apply -f database-sfs.yaml
 kubectl apply -f internal-deploy.yaml
 kubectl apply -f external-deploy.yaml
 ```
@@ -83,6 +83,7 @@ minikube ssh -- curl -i http://localhost:30000/ping/pong
 
 ```shell
 kubectl delete deploy --all
+kubectl delete sts --all
 
 kubectl delete svc --all
 

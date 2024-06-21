@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-server
+  name: mysql-server-h
   labels:
     name: database-svc
     app: kubernetes-poc
@@ -10,3 +10,4 @@ spec:
     name: database-po
   ports:
     - port: 3306
+  clusterIP: None

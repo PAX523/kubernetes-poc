@@ -1,11 +1,12 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: database-deploy
+  name: database-sts
   labels:
     name: database-deploy
     app: kubernetes-poc
 spec:
+  serviceName: mysql-server-h
   selector:
     matchLabels:
       name: database-po
@@ -17,6 +18,15 @@ spec:
         name: database-po
         app: kubernetes-poc
     spec:
+      subdomain: mysql-server-h
+      hostname: mysql-pod
+      initContainers:
+        - name: init-mysql-socket
+          image: busybox
+          command: [ 'sh', '-c', 'rm -f /var/lib/mysql/mysql.sock*' ]
+          volumeMounts:
+            - name: database-persistent-storage
+              mountPath: /var/lib/mysql
       containers:
         - name: mysql-server
           image: mysql/mysql-server:8.0.32-1.2.11-server
