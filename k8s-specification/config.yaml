@@ -7,7 +7,7 @@ data:
   internal-server.port: "8081"
   external-server.port: "8080"
 
-  database.host: "mysql-server-h"
+  database.host: "database-sts-0.mysql-server-h.default.svc.cluster.local"
   database.port: "3306"
   database.user: "application-user"
 ---

@@ -784,6 +784,8 @@ Headless service: special kind of service which doesn't perform load balancing, 
 podname.headless-servicename.namespace.svc.example.com
 ```
 
+For example for local: `mysql-0.mysql-h.default.svc.cluster.local`
+
 In case of StatefulSets, the names are like: `mysql-0.mysql-h.default.svc.cluster.local` (master service),
 `mysql-1.mysql-h.default.svc.cluster.local`, ...
 
