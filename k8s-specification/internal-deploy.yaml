@@ -38,8 +38,14 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: internal-server.port
+          startupProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 8
+            exec:
+              command: [ "sh", "-c", "nc -zv $MYSQL_HOST $MYSQL_PORT" ]
           readinessProbe:
-            initialDelaySeconds: 1
+            initialDelaySeconds: 5
             periodSeconds: 3
             failureThreshold: 8
             exec:
