@@ -56,7 +56,7 @@ kubectl apply -f database-svc.yaml
 kubectl apply -f internal-svc.yaml
 kubectl apply -f external-svc.yaml
 
-kubectl apply -f database-sfs.yaml
+kubectl apply -f database-sts.yaml
 kubectl apply -f internal-deploy.yaml
 kubectl apply -f external-deploy.yaml
 ```
