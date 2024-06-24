@@ -41,20 +41,22 @@ spec:
                 secretKeyRef:
                   name: app-secret
                   key: database.password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: database.name
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: app-secret
                   key: database.root.password
+            - name: MYSQL_ROOT_HOST
+              value: "%"
           volumeMounts:
-            - name: mysql-initdb
-              mountPath: /docker-entrypoint-initdb.d
             - name: database-persistent-storage
               mountPath: /var/lib/mysql
       volumes:
-        - name: mysql-initdb
-          secret:
-            secretName: mysql-initdb-config
         - name: database-persistent-storage
           persistentVolumeClaim:
             claimName: database-pvc

@@ -38,6 +38,16 @@ spec:
                 configMapKeyRef:
                   name: app-config
                   key: internal-server.port
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: database.user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: database.password
           startupProbe:
             initialDelaySeconds: 30
             periodSeconds: 10

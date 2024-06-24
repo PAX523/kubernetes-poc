@@ -92,6 +92,8 @@ kubectl delete pv --all
 
 kubectl delete cm --all
 kubectl delete secret --all
+
+minikube ssh -- sudo rm -rf /tmp/database/mysql/* # optional: delete database
 ```
 
 ### DigitalOcean:

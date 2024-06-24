@@ -9,19 +9,13 @@ data:
 
   database.host: "database-sts-0.mysql-server-h.default.svc.cluster.local"
   database.port: "3306"
-  database.user: "application-user"
+  database.user: "appuser"
+  database.name: "kubernetes-poc"
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: app-secret
 data:
-  database.root.password: "cGFzc3dvcmQK"
+  database.root.password: "cGFzc3dvcmQ="
   database.password: "dWx0cmEtc2VjdXJlLXBhc3N3b3JkLTEyMw=="
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: mysql-initdb-config
-data:
-  database.init.sql: "Q1JFQVRFIERBVEFCQVNFIElGIE5PVCBFWElTVFMgYGt1YmVybmV0ZXMtcG9jYDsKQ1JFQVRFIFVTRVIgJ2FwcGxpY2F0aW9uLXVzZXInQCclJyBJREVOVElGSUVEIEJZICd1bHRyYS1zZWN1cmUtcGFzc3dvcmQtMTIzJzsKR1JBTlQgQUxMIE9OICouKiBUTyAnYXBwbGljYXRpb24tdXNlcidAJyUnOw=="
