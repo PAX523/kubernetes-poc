@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: external-service-netpol
+  labels:
+    name: external-service-netpol
+    app: kubernetes-poc
+spec:
+  podSelector:
+    matchLabels:
+      name: external-service-po
+      app: kubernetes-poc
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              name: internal-service-po
+              app: kubernetes-poc
+      ports:
+        - protocol: TCP
+          port: 8081

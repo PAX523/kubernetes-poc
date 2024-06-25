@@ -59,6 +59,10 @@ kubectl apply -f external-svc.yaml
 kubectl apply -f database-sts.yaml
 kubectl apply -f internal-deploy.yaml
 kubectl apply -f external-deploy.yaml
+
+kubectl apply -f database-netpol.yaml
+kubectl apply -f internal-netpol.yaml
+kubectl apply -f external-netpol.yaml
 ```
 
 ### Update deployment:
@@ -82,6 +86,7 @@ minikube ssh -- curl -i http://localhost:30000/ping/pong
 ### Remove deployment:
 
 ```shell
+kubectl delete netpol --all
 kubectl delete deploy --all
 kubectl delete sts --all
 

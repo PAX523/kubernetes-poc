@@ -9,6 +9,7 @@ spec:
   type: LoadBalancer
   selector:
     name: external-service-po
+    app: kubernetes-poc
   ports:
     - port: 8080
       nodePort: 30000

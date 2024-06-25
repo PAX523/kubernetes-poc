@@ -8,5 +8,6 @@ metadata:
 spec:
   selector:
     name: internal-service-po
+    app: kubernetes-poc
   ports:
     - port: 8081

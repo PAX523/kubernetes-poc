@@ -3,11 +3,12 @@ kind: Service
 metadata:
   name: mysql-server-h
   labels:
-    name: database-svc
+    name: myssql-server-h
     app: kubernetes-poc
 spec:
   selector:
     name: database-po
+    app: kubernetes-poc
   ports:
     - port: 3306
   clusterIP: None

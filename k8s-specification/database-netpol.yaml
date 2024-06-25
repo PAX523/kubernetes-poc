@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: database-netpol
+  labels:
+    name: database-netpol
+    app: kubernetes-poc
+spec:
+  podSelector:
+    matchLabels:
+      name: database-po
+      app: kubernetes-poc
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              name: internal-service-po
+              app: kubernetes-poc
+      ports:
+        - protocol: TCP
+          port: 3306
