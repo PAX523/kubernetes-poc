@@ -60,7 +60,6 @@ kubectl apply -f database-sts.yaml
 kubectl apply -f internal-deploy.yaml
 kubectl apply -f external-deploy.yaml
 
-kubectl apply -f default-deny-netpol.yaml
 kubectl apply -f database-netpol.yaml
 kubectl apply -f internal-netpol.yaml
 kubectl apply -f external-netpol.yaml
