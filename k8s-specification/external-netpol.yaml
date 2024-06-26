@@ -11,7 +11,10 @@ spec:
       name: external-service-po
       app: kubernetes-poc
   policyTypes:
+    - Ingress
     - Egress
+  ingress:
+    - from: [ ]
   egress:
     - to:
         - podSelector:
