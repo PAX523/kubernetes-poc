@@ -86,19 +86,32 @@ minikube ssh -- curl -i http://localhost:30000/ping/pong
 ### Remove deployment:
 
 ```shell
-kubectl delete netpol --all
-kubectl delete deploy --all
-kubectl delete sts --all
+kubectl delete netpol --all -n default
+kubectl delete deploy --all -n default
+kubectl delete sts --all -n default
 
-kubectl delete svc --all
+kubectl delete svc --all -n default
 
-kubectl delete pvc --all
-kubectl delete pv --all
+kubectl delete pvc --all -n default
+kubectl delete pv --all -n default
 
-kubectl delete cm --all
-kubectl delete secret --all
+kubectl delete cm --all -n default
+kubectl delete secret --all -n default
 
 minikube ssh -- sudo rm -rf /tmp/database/mysql/* # optional: delete database
+```
+
+### Script snippets to test endpoints:
+
+```shell
+# ping database container via nc
+nc -vz database-sts-0.mysql-server-h.default.svc.cluster.local 3306
+
+# ping internal service container
+/usr/bin/curl http://internal-svc:8081/ping/pong
+
+# ping database container via mysql
+mysql -h database-sts-0.mysql-server-h.default.svc.cluster.local -u root -pa
 ```
 
 ### DigitalOcean:
