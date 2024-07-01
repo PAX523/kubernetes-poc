@@ -48,6 +48,8 @@ minikube ssh
 ### Deploy resources:
 
 ```shell
+mkdir -p /tmp/database/mysql/
+
 kubectl apply -f config.yaml
 kubectl apply -k database-pv/local/
 kubectl apply -f database-pvc.yaml
